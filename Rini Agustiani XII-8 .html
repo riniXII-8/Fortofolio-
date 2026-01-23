@@ -1,0 +1,1776 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jakarta Tourism Hub - Destinasi Wisata Terbaik Jakarta</title>
+  <meta name="description" content="Temukan destinasi wisata terbaik di Jakarta. Panduan lengkap tempat wisata, kuliner, dan budaya Jakarta yang menakjubkan.">
+  <meta name="keywords" content="wisata jakarta, destinasi jakarta, tourism jakarta, tempat wisata jakarta">
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #f8fafc;
+            --text-color: #1e293b;
+            --accent-color: #10b981;
+            --surface-color: #ffffff;
+            --font-family: 'Inter', sans-serif;
+            --font-size: 16;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #3b82f6;
+            --secondary-color: #1e293b;
+            --text-color: #f1f5f9;
+            --accent-color: #34d399;
+            --surface-color: #334155;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: var(--font-family);
+            color: var(--text-color);
+            background: var(--secondary-color);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] .header {
+            background: rgba(30, 41, 59, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: calc(var(--font-size) * 1.5px);
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: calc(var(--font-size) * 1px);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle, .lang-toggle {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: calc(var(--font-size) * 0.875px);
+        }
+
+        .theme-toggle:hover, .lang-toggle:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: calc(var(--font-size) * 1.5px);
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero-title {
+            font-size: calc(var(--font-size) * 3.5px);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: calc(var(--font-size) * 1.25px);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: calc(var(--font-size) * 1px);
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        /* Search Bar */
+        .search-section {
+            background: var(--surface-color);
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .search-bar {
+            display: flex;
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--secondary-color);
+            border-radius: 50px;
+            padding: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 1rem 1.5rem;
+            font-size: calc(var(--font-size) * 1px);
+            color: var(--text-color);
+            outline: none;
+        }
+
+        .search-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: calc(var(--font-size) * 1px);
+        }
+
+        .search-btn:hover {
+            background: var(--accent-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: var(--surface-color);
+            border-radius: 15px;
+            padding: 2rem;
+            height: fit-content;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sections */
+        .section {
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: calc(var(--font-size) * 2.5px);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text-color);
+        }
+
+        /* Destinations Grid */
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .destination-card {
+            background: var(--surface-color);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .destination-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .destination-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: calc(var(--font-size) * 3px);
+        }
+
+        .destination-content {
+            padding: 1.5rem;
+        }
+
+        .destination-title {
+            font-size: calc(var(--font-size) * 1.25px);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .destination-desc {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 1rem;
+            font-size: calc(var(--font-size) * 0.875px);
+        }
+
+        .destination-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #fbbf24;
+            font-size: calc(var(--font-size) * 0.875px);
+        }
+
+        /* Statistics Counter */
+        .stats-section {
+            background: var(--primary-color);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .stat-item {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: calc(var(--font-size) * 3px);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: calc(var(--font-size) * 1px);
+            opacity: 0.9;
+        }
+
+        /* Testimonials Carousel */
+        .testimonials-section {
+            background: var(--surface-color);
+            padding: 4rem 0;
+        }
+
+        .testimonials-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .testimonials-carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+
+        .testimonial-slide {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+            background: var(--secondary-color);
+        }
+
+        .testimonial-slide.active {
+            display: block;
+        }
+
+        .testimonial-text {
+            font-size: calc(var(--font-size) * 1.125px);
+            font-style: italic;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: calc(var(--font-size) * 1px);
+        }
+
+        /* Contact Form */
+        .contact-section {
+            padding: 4rem 0;
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .contact-form {
+            background: var(--surface-color);
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: calc(var(--font-size) * 0.875px);
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            font-size: calc(var(--font-size) * 1px);
+            color: var(--text-color);
+            background: var(--secondary-color);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Map Section */
+        .map-section {
+            padding: 4rem 0;
+            background: var(--surface-color);
+        }
+
+        .map-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        #map {
+            height: 400px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Weather Widget */
+        .weather-widget {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .weather-title {
+            font-size: calc(var(--font-size) * 1.125px);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .weather-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .weather-temp {
+            font-size: calc(var(--font-size) * 2px);
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .weather-desc {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: calc(var(--font-size) * 0.875px);
+        }
+
+        /* Chatbot */
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: calc(var(--font-size) * 1.5px);
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 2rem;
+            width: 350px;
+            height: 500px;
+            background: var(--surface-color);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .chatbot-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: var(--secondary-color);
+        }
+
+        .chatbot-input-area {
+            padding: 1rem;
+            border-top: 1px solid var(--secondary-color);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 25px;
+            font-size: calc(var(--font-size) * 0.875px);
+        }
+
+        .chatbot-send {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: calc(var(--font-size) * 0.875px);
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 10px;
+            max-width: 80%;
+            font-size: calc(var(--font-size) * 0.875px);
+        }
+
+        .message.bot {
+            background: var(--primary-color);
+            color: white;
+            margin-right: auto;
+        }
+
+        .message.user {
+            background: var(--surface-color);
+            color: var(--text-color);
+            margin-left: auto;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-color);
+            color: white;
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-size: calc(var(--font-size) * 1.125px);
+        }
+
+        .footer-section p, .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            display: block;
+            font-size: calc(var(--font-size) * 0.875px);
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: calc(var(--font-size) * 1px);
+        }
+
+        .social-link:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: calc(var(--font-size) * 0.875px);
+        }
+
+        /* Loading States */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: calc(var(--font-size) * 2.5px);
+            }
+
+            .hero-subtitle {
+                font-size: calc(var(--font-size) * 1.125px);
+            }
+
+            .main-content {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .sidebar {
+                width: 100%;
+                order: -1;
+            }
+
+            .destinations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .chatbot-window {
+                width: calc(100vw - 2rem);
+                right: 1rem;
+                left: 1rem;
+            }
+
+            .search-bar {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .search-btn {
+                border-radius: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 1rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-form {
+                padding: 2rem 1rem;
+            }
+        }
+
+        /* Scroll Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Filter Buttons */
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--primary-color);
+            background: transparent;
+            color: var(--primary-color);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: calc(var(--font-size) * 0.875px);
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body><!-- Header -->
+  <header class="header">
+   <nav class="nav-container"><a href="#" class="logo" id="siteTitle">Jakarta Tourism Hub</a>
+    <ul class="nav-menu">
+     <li><a href="#home" class="nav-link">Beranda</a></li>
+     <li><a href="#destinations" class="nav-link">Destinasi</a></li>
+     <li><a href="#gallery" class="nav-link">Galeri</a></li>
+     <li><a href="#events" class="nav-link">Event</a></li>
+     <li><a href="#contact" class="nav-link">Kontak</a></li>
+    </ul>
+    <div class="nav-controls"><button class="lang-toggle" id="langToggle">EN</button> <button class="theme-toggle" id="themeToggle"> <i class="fas fa-moon"></i> </button> <button class="mobile-menu-btn" id="mobileMenuBtn"> <i class="fas fa-bars"></i> </button>
+    </div>
+   </nav>
+  </header><!-- Hero Section -->
+  <section class="hero" id="home">
+   <div class="hero-bg"></div>
+   <div class="hero-content">
+    <h1 class="hero-title" id="heroTitle">Temukan Pesona Jakarta</h1>
+    <p class="hero-subtitle" id="heroSubtitle">Jelajahi destinasi wisata menakjubkan, kuliner lezat, dan budaya kaya di ibu kota Indonesia</p>
+    <div class="hero-cta"><a href="#destinations" class="btn btn-primary"> <i class="fas fa-map-marked-alt"></i> Jelajahi Sekarang </a> <a href="#virtual-tour" class="btn btn-secondary"> <i class="fas fa-vr-cardboard"></i> Virtual Tour 360° </a>
+    </div>
+   </div>
+  </section><!-- Search Section -->
+  <section class="search-section">
+   <div class="search-container">
+    <div class="search-bar"><input type="text" class="search-input" placeholder="Cari destinasi wisata..." id="searchInput"> <button class="search-btn" id="searchBtn"> <i class="fas fa-search"></i> </button>
+    </div>
+   </div>
+  </section><!-- Main Content -->
+  <div class="main-content"><!-- Sidebar -->
+   <aside class="sidebar"><!-- Weather Widget -->
+    <div class="weather-widget">
+     <h3 class="weather-title">Cuaca Jakarta Hari Ini</h3>
+     <div class="weather-info">
+      <div class="weather-temp" id="weatherTemp">
+       32°C
+      </div>
+      <div>
+       <div class="weather-desc" id="weatherDesc">
+        Cerah Berawan
+       </div>
+       <div class="weather-desc">
+        Kelembaban: <span id="weatherHumidity">65%</span>
+       </div>
+      </div>
+     </div>
+    </div><!-- Quick Links -->
+    <div class="sidebar-section">
+     <h3 style="margin-bottom: 1rem; color: var(--text-color); font-size: calc(var(--font-size) * 1.125px);">Link Cepat</h3>
+     <div style="display: flex; flex-direction: column; gap: 0.5rem;"><a href="#tickets" style="color: var(--primary-color); text-decoration: none; padding: 0.5rem 0; border-bottom: 1px solid var(--secondary-color); font-size: calc(var(--font-size) * 0.875px);"> <i class="fas fa-ticket-alt"></i> Tiket &amp; Jadwal </a> <a href="#facilities" style="color: var(--primary-color); text-decoration: none; padding: 0.5rem 0; border-bottom: 1px solid var(--secondary-color); font-size: calc(var(--font-size) * 0.875px);"> <i class="fas fa-concierge-bell"></i> Fasilitas </a> <a href="#events" style="color: var(--primary-color); text-decoration: none; padding: 0.5rem 0; border-bottom: 1px solid var(--secondary-color); font-size: calc(var(--font-size) * 0.875px);"> <i class="fas fa-calendar-alt"></i> Event Terbaru </a> <a href="#blog" style="color: var(--primary-color); text-decoration: none; padding: 0.5rem 0; font-size: calc(var(--font-size) * 0.875px);"> <i class="fas fa-blog"></i> Blog Wisata </a>
+     </div>
+    </div>
+   </aside><!-- Main Content Area -->
+   <main class="content"><!-- About Section -->
+    <section class="section fade-in" id="about">
+     <h2 class="section-title" id="aboutTitle">Tentang Wisata Jakarta</h2>
+     <div style="background: var(--surface-color); padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+      <p style="font-size: calc(var(--font-size) * 1.125px); line-height: 1.6; color: var(--text-color); margin-bottom: 1.5rem;">Jakarta, ibu kota Indonesia yang dinamis, menawarkan perpaduan unik antara modernitas dan tradisi. Dari gedung pencakar langit yang megah hingga kampung bersejarah yang autentik, Jakarta memiliki pesona yang tak terbantahkan untuk setiap wisatawan.</p>
+      <p style="font-size: calc(var(--font-size) * 1px); line-height: 1.6; color: var(--text-color); opacity: 0.8;">Jelajahi Kota Tua yang bersejarah, nikmati kuliner street food yang legendaris, berbelanja di mal-mal mewah, atau saksikan pertunjukan seni budaya yang memukau. Jakarta siap memberikan pengalaman wisata yang tak terlupakan.</p>
+     </div>
+    </section><!-- Destinations Section -->
+    <section class="section fade-in" id="destinations">
+     <h2 class="section-title">Destinasi Populer</h2><!-- Filter Buttons -->
+     <div class="filter-buttons"><button class="filter-btn active" data-filter="all">Semua</button> <button class="filter-btn" data-filter="sejarah">Sejarah</button> <button class="filter-btn" data-filter="modern">Modern</button> <button class="filter-btn" data-filter="kuliner">Kuliner</button> <button class="filter-btn" data-filter="belanja">Belanja</button>
+     </div>
+     <div class="destinations-grid" id="destinationsGrid"><!-- Destinations will be populated by JavaScript -->
+     </div>
+    </section><!-- Statistics Section -->
+    <section class="stats-section fade-in">
+     <div class="stats-grid">
+      <div class="stat-item">
+       <div class="stat-number" data-count="150">
+        0
+       </div>
+       <div class="stat-label">
+        Destinasi Wisata
+       </div>
+      </div>
+      <div class="stat-item">
+       <div class="stat-number" data-count="50000">
+        0
+       </div>
+       <div class="stat-label">
+        Wisatawan per Bulan
+       </div>
+      </div>
+      <div class="stat-item">
+       <div class="stat-number" data-count="500">
+        0
+       </div>
+       <div class="stat-label">
+        Restoran &amp; Kuliner
+       </div>
+      </div>
+      <div class="stat-item">
+       <div class="stat-number" data-count="25">
+        0
+       </div>
+       <div class="stat-label">
+        Event Bulanan
+       </div>
+      </div>
+     </div>
+    </section><!-- Testimonials Section -->
+    <section class="testimonials-section fade-in">
+     <div class="testimonials-container">
+      <h2 class="section-title">Testimoni Pengunjung</h2>
+      <div class="testimonials-carousel">
+       <div class="testimonial-slide active">
+        <p class="testimonial-text">"Jakarta benar-benar kota yang menakjubkan! Dari Kota Tua yang bersejarah hingga mal-mal modern, semuanya bisa ditemukan di sini. Kulinernya juga luar biasa!"</p>
+        <div class="testimonial-author">
+         - Sarah, Wisatawan dari Bali
+        </div>
+       </div>
+       <div class="testimonial-slide">
+        <p class="testimonial-text">"Pengalaman virtual tour 360° sangat membantu saya merencanakan perjalanan. Pelayanan guide lokal juga sangat ramah dan informatif."</p>
+        <div class="testimonial-author">
+         - Ahmad, Wisatawan dari Surabaya
+        </div>
+       </div>
+       <div class="testimonial-slide">
+        <p class="testimonial-text">"Transportasi di Jakarta sudah sangat baik dengan MRT dan TransJakarta. Mudah sekali mengunjungi berbagai destinasi wisata."</p>
+        <div class="testimonial-author">
+         - Lisa, Wisatawan Mancanegara
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+   </main>
+  </div><!-- Map Section -->
+  <section class="map-section fade-in">
+   <div class="map-container">
+    <h2 class="section-title">Peta Destinasi Wisata</h2>
+    <div id="map"></div>
+   </div>
+  </section><!-- Contact Section -->
+  <section class="contact-section fade-in" id="contact">
+   <div class="contact-container">
+    <h2 class="section-title" id="contactTitle">Hubungi Kami</h2>
+    <form class="contact-form" id="contactForm">
+     <div class="form-group"><label for="contactName" class="form-label">Nama Lengkap</label> <input type="text" id="contactName" class="form-input" required>
+     </div>
+     <div class="form-group"><label for="contactEmail" class="form-label">Email</label> <input type="email" id="contactEmail" class="form-input" required>
+     </div>
+     <div class="form-group"><label for="contactDestination" class="form-label">Destinasi yang Diminati</label> <select id="contactDestination" class="form-select"> <option value="">Pilih Destinasi</option> <option value="kota-tua">Kota Tua Jakarta</option> <option value="monas">Monumen Nasional</option> <option value="ancol">Taman Impian Jaya Ancol</option> <option value="grand-indonesia">Grand Indonesia</option> </select>
+     </div>
+     <div class="form-group"><label for="contactRating" class="form-label">Rating Pengalaman (1-5)</label> <select id="contactRating" class="form-select"> <option value="">Pilih Rating</option> <option value="5">5 - Sangat Puas</option> <option value="4">4 - Puas</option> <option value="3">3 - Cukup</option> <option value="2">2 - Kurang</option> <option value="1">1 - Sangat Kurang</option> </select>
+     </div>
+     <div class="form-group"><label for="contactMessage" class="form-label">Pesan / Saran</label> <textarea id="contactMessage" class="form-textarea" rows="5" required></textarea>
+     </div><button type="submit" class="btn btn-primary" style="width: 100%;"> <span class="btn-text">Kirim Pesan</span> <span class="btn-loading" style="display: none;"> <span class="spinner"></span> Mengirim... </span> </button>
+    </form>
+   </div>
+  </section><!-- Chatbot --> <button class="chatbot-toggle" id="chatbotToggle"> <i class="fas fa-comments"></i> </button>
+  <div class="chatbot-window" id="chatbotWindow">
+   <div class="chatbot-header">
+    <h3 style="font-size: calc(var(--font-size) * 1px); margin: 0;">Panduan Wisata Jakarta</h3><button id="chatbotClose" style="background: none; border: none; color: white; font-size: calc(var(--font-size) * 1.25px); cursor: pointer;"> <i class="fas fa-times"></i> </button>
+   </div>
+   <div class="chatbot-messages" id="chatbotMessages">
+    <div class="message bot">
+     Halo! Saya adalah asisten virtual untuk panduan wisata Jakarta. Ada yang bisa saya bantu?
+    </div>
+   </div>
+   <div class="chatbot-input-area"><input type="text" class="chatbot-input" id="chatbotInput" placeholder="Ketik pertanyaan Anda..."> <button class="chatbot-send" id="chatbotSend"> <i class="fas fa-paper-plane"></i> </button>
+   </div>
+  </div><!-- Footer -->
+  <footer class="footer">
+   <div class="footer-content">
+    <div class="footer-section">
+     <h3>Jakarta Tourism Hub</h3>
+     <p>Platform terpercaya untuk menjelajahi keindahan dan keunikan destinasi wisata Jakarta.</p>
+     <div class="social-links"><a href="#" class="social-link" target="_blank" rel="noopener noreferrer"> <i class="fab fa-facebook-f"></i> </a> <a href="#" class="social-link" target="_blank" rel="noopener noreferrer"> <i class="fab fa-instagram"></i> </a> <a href="#" class="social-link" target="_blank" rel="noopener noreferrer"> <i class="fab fa-twitter"></i> </a> <a href="#" class="social-link" target="_blank" rel="noopener noreferrer"> <i class="fab fa-youtube"></i> </a>
+     </div>
+    </div>
+    <div class="footer-section">
+     <h3>Destinasi Populer</h3><a href="#kota-tua">Kota Tua Jakarta</a> <a href="#monas">Monumen Nasional</a> <a href="#ancol">Taman Impian Jaya Ancol</a> <a href="#grand-indonesia">Grand Indonesia</a> <a href="#taman-mini">Taman Mini Indonesia Indah</a>
+    </div>
+    <div class="footer-section">
+     <h3>Layanan</h3><a href="#virtual-tour">Virtual Tour 360°</a> <a href="#booking">Pemesanan Tiket</a> <a href="#guide">Panduan Wisata</a> <a href="#transport">Informasi Transportasi</a> <a href="#events">Event &amp; Kegiatan</a>
+    </div>
+    <div class="footer-section">
+     <h3>Kontak</h3>
+     <p><i class="fas fa-map-marker-alt"></i> Jakarta, Indonesia</p>
+     <p><i class="fas fa-phone"></i> +62 21 1234 5678</p>
+     <p><i class="fas fa-envelope"></i> info@jakartatourismhub.com</p>
+     <p><i class="fas fa-clock"></i> 24/7 Customer Support</p>
+    </div>
+   </div>
+   <div class="footer-bottom">
+    <p>© 2024 Jakarta Tourism Hub. All rights reserved. | Privacy Policy | Terms of Service</p>
+   </div>
+  </footer>
+  <script>
+        // Configuration and Data SDK
+        const defaultConfig = {
+            site_title: "Jakarta Tourism Hub",
+            hero_title: "Temukan Pesona Jakarta",
+            hero_subtitle: "Jelajahi destinasi wisata menakjubkan, kuliner lezat, dan budaya kaya di ibu kota Indonesia",
+            about_title: "Tentang Wisata Jakarta",
+            contact_title: "Hubungi Kami",
+            primary_color: "#2563eb",
+            secondary_color: "#f8fafc",
+            text_color: "#1e293b",
+            accent_color: "#10b981",
+            surface_color: "#ffffff",
+            font_family: "Inter",
+            font_size: 16
+        };
+
+        let config = { ...defaultConfig };
+        let currentRecordCount = 0;
+        let currentLanguage = 'id';
+        let isDarkMode = false;
+
+        // Data Handler for SDK
+        const dataHandler = {
+            onDataChanged(data) {
+                currentRecordCount = data.length;
+                console.log(`Data updated: ${data.length} records`);
+            }
+        };
+
+        // Destinations Data
+        const destinations = [
+            {
+                id: 1,
+                name: "Kota Tua Jakarta",
+                category: "sejarah",
+                description: "Kawasan bersejarah dengan arsitektur kolonial Belanda yang memukau",
+                rating: 4.5,
+                image: "🏛️"
+            },
+            {
+                id: 2,
+                name: "Monumen Nasional (Monas)",
+                category: "sejarah",
+                description: "Simbol kemerdekaan Indonesia dengan pemandangan kota dari atas",
+                rating: 4.3,
+                image: "🗼"
+            },
+            {
+                id: 3,
+                name: "Taman Impian Jaya Ancol",
+                category: "modern",
+                description: "Kompleks rekreasi terlengkap dengan pantai dan wahana seru",
+                rating: 4.4,
+                image: "🎢"
+            },
+            {
+                id: 4,
+                name: "Grand Indonesia",
+                category: "belanja",
+                description: "Pusat perbelanjaan mewah dengan brand internasional",
+                rating: 4.6,
+                image: "🛍️"
+            },
+            {
+                id: 5,
+                name: "Pasar Baru",
+                category: "kuliner",
+                description: "Surga kuliner tradisional dengan cita rasa autentik Jakarta",
+                rating: 4.2,
+                image: "🍜"
+            },
+            {
+                id: 6,
+                name: "Museum Nasional",
+                category: "sejarah",
+                description: "Koleksi artefak budaya Indonesia yang lengkap dan bersejarah",
+                rating: 4.1,
+                image: "🏛️"
+            }
+        ];
+
+        // Language translations
+        const translations = {
+            id: {
+                home: "Beranda",
+                destinations: "Destinasi",
+                gallery: "Galeri",
+                events: "Event",
+                contact: "Kontak",
+                exploreNow: "Jelajahi Sekarang",
+                virtualTour: "Virtual Tour 360°",
+                searchPlaceholder: "Cari destinasi wisata...",
+                weatherToday: "Cuaca Jakarta Hari Ini",
+                quickLinks: "Link Cepat",
+                aboutJakarta: "Tentang Wisata Jakarta",
+                popularDestinations: "Destinasi Populer",
+                visitorTestimonials: "Testimoni Pengunjung",
+                destinationMap: "Peta Destinasi Wisata",
+                contactUs: "Hubungi Kami"
+            },
+            en: {
+                home: "Home",
+                destinations: "Destinations",
+                gallery: "Gallery",
+                events: "Events",
+                contact: "Contact",
+                exploreNow: "Explore Now",
+                virtualTour: "Virtual Tour 360°",
+                searchPlaceholder: "Search destinations...",
+                weatherToday: "Jakarta Weather Today",
+                quickLinks: "Quick Links",
+                aboutJakarta: "About Jakarta Tourism",
+                popularDestinations: "Popular Destinations",
+                visitorTestimonials: "Visitor Testimonials",
+                destinationMap: "Destination Map",
+                contactUs: "Contact Us"
+            }
+        };
+
+        // Initialize application
+        async function initializeApp() {
+            // Initialize Data SDK
+            if (window.dataSdk) {
+                const initResult = await window.dataSdk.init(dataHandler);
+                if (!initResult.isOk) {
+                    console.error("Failed to initialize data SDK");
+                }
+            }
+
+            // Initialize Element SDK
+            if (window.elementSdk) {
+                await window.elementSdk.init({
+                    defaultConfig,
+                    onConfigChange: async (newConfig) => {
+                        config = { ...config, ...newConfig };
+                        updateUIFromConfig();
+                    },
+                    mapToCapabilities: (config) => ({
+                        recolorables: [
+                            {
+                                get: () => config.primary_color || defaultConfig.primary_color,
+                                set: (value) => {
+                                    config.primary_color = value;
+                                    window.elementSdk.setConfig({ primary_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.secondary_color || defaultConfig.secondary_color,
+                                set: (value) => {
+                                    config.secondary_color = value;
+                                    window.elementSdk.setConfig({ secondary_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.text_color || defaultConfig.text_color,
+                                set: (value) => {
+                                    config.text_color = value;
+                                    window.elementSdk.setConfig({ text_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.accent_color || defaultConfig.accent_color,
+                                set: (value) => {
+                                    config.accent_color = value;
+                                    window.elementSdk.setConfig({ accent_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.surface_color || defaultConfig.surface_color,
+                                set: (value) => {
+                                    config.surface_color = value;
+                                    window.elementSdk.setConfig({ surface_color: value });
+                                }
+                            }
+                        ],
+                        borderables: [],
+                        fontEditable: {
+                            get: () => config.font_family || defaultConfig.font_family,
+                            set: (value) => {
+                                config.font_family = value;
+                                window.elementSdk.setConfig({ font_family: value });
+                            }
+                        },
+                        fontSizeable: {
+                            get: () => config.font_size || defaultConfig.font_size,
+                            set: (value) => {
+                                config.font_size = value;
+                                window.elementSdk.setConfig({ font_size: value });
+                            }
+                        }
+                    }),
+                    mapToEditPanelValues: (config) => new Map([
+                        ["site_title", config.site_title || defaultConfig.site_title],
+                        ["hero_title", config.hero_title || defaultConfig.hero_title],
+                        ["hero_subtitle", config.hero_subtitle || defaultConfig.hero_subtitle],
+                        ["about_title", config.about_title || defaultConfig.about_title],
+                        ["contact_title", config.contact_title || defaultConfig.contact_title]
+                    ])
+                });
+            }
+
+            // Initialize other components
+            initializeDestinations();
+            initializeMap();
+            initializeEventListeners();
+            initializeAnimations();
+            initializeCarousel();
+            initializeCounters();
+            updateUIFromConfig();
+        }
+
+        // Update UI from config
+        function updateUIFromConfig() {
+            // Update CSS variables
+            document.documentElement.style.setProperty('--primary-color', config.primary_color || defaultConfig.primary_color);
+            document.documentElement.style.setProperty('--secondary-color', config.secondary_color || defaultConfig.secondary_color);
+            document.documentElement.style.setProperty('--text-color', config.text_color || defaultConfig.text_color);
+            document.documentElement.style.setProperty('--accent-color', config.accent_color || defaultConfig.accent_color);
+            document.documentElement.style.setProperty('--surface-color', config.surface_color || defaultConfig.surface_color);
+            document.documentElement.style.setProperty('--font-family', `'${config.font_family || defaultConfig.font_family}', Arial, sans-serif`);
+            document.documentElement.style.setProperty('--font-size', config.font_size || defaultConfig.font_size);
+
+            // Update text content
+            const siteTitle = document.getElementById('siteTitle');
+            if (siteTitle) siteTitle.textContent = config.site_title || defaultConfig.site_title;
+
+            const heroTitle = document.getElementById('heroTitle');
+            if (heroTitle) heroTitle.textContent = config.hero_title || defaultConfig.hero_title;
+
+            const heroSubtitle = document.getElementById('heroSubtitle');
+            if (heroSubtitle) heroSubtitle.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
+
+            const aboutTitle = document.getElementById('aboutTitle');
+            if (aboutTitle) aboutTitle.textContent = config.about_title || defaultConfig.about_title;
+
+            const contactTitle = document.getElementById('contactTitle');
+            if (contactTitle) contactTitle.textContent = config.contact_title || defaultConfig.contact_title;
+        }
+
+        // Initialize destinations
+        function initializeDestinations() {
+            const grid = document.getElementById('destinationsGrid');
+            if (!grid) return;
+
+            function renderDestinations(filter = 'all') {
+                const filteredDestinations = filter === 'all' 
+                    ? destinations 
+                    : destinations.filter(dest => dest.category === filter);
+
+                grid.innerHTML = filteredDestinations.map(dest => `
+                    <div class="destination-card" data-category="${dest.category}">
+                        <div class="destination-image">${dest.image}</div>
+                        <div class="destination-content">
+                            <h3 class="destination-title">${dest.name}</h3>
+                            <p class="destination-desc">${dest.description}</p>
+                            <div class="destination-meta">
+                                <div class="rating">
+                                    ${'★'.repeat(Math.floor(dest.rating))} ${dest.rating}
+                                </div>
+                                <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: calc(var(--font-size) * 0.875px);" onclick="openDestinationDetails('${dest.id}')">
+                                    Detail
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Filter functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderDestinations(btn.dataset.filter);
+                });
+            });
+
+            renderDestinations();
+        }
+
+        // Initialize map
+        function initializeMap() {
+            if (typeof L === 'undefined') return;
+
+            const map = L.map('map').setView([-6.2088, 106.8456], 11);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Add markers for destinations
+            const markers = [
+                { lat: -6.1352, lng: 106.8133, name: "Kota Tua Jakarta" },
+                { lat: -6.1754, lng: 106.8272, name: "Monumen Nasional" },
+                { lat: -6.1229, lng: 106.8421, name: "Taman Impian Jaya Ancol" },
+                { lat: -6.1944, lng: 106.8229, name: "Grand Indonesia" }
+            ];
+
+            markers.forEach(marker => {
+                L.marker([marker.lat, marker.lng])
+                    .addTo(map)
+                    .bindPopup(marker.name);
+            });
+        }
+
+        // Initialize event listeners
+        function initializeEventListeners() {
+            // Theme toggle
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', toggleTheme);
+            }
+
+            // Language toggle
+            const langToggle = document.getElementById('langToggle');
+            if (langToggle) {
+                langToggle.addEventListener('click', toggleLanguage);
+            }
+
+            // Search functionality
+            const searchBtn = document.getElementById('searchBtn');
+            const searchInput = document.getElementById('searchInput');
+            if (searchBtn && searchInput) {
+                searchBtn.addEventListener('click', performSearch);
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') performSearch();
+                });
+            }
+
+            // Contact form
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', handleContactSubmit);
+            }
+
+            // Chatbot
+            const chatbotToggle = document.getElementById('chatbotToggle');
+            const chatbotClose = document.getElementById('chatbotClose');
+            const chatbotSend = document.getElementById('chatbotSend');
+            const chatbotInput = document.getElementById('chatbotInput');
+
+            if (chatbotToggle) {
+                chatbotToggle.addEventListener('click', toggleChatbot);
+            }
+            if (chatbotClose) {
+                chatbotClose.addEventListener('click', closeChatbot);
+            }
+            if (chatbotSend) {
+                chatbotSend.addEventListener('click', sendChatMessage);
+            }
+            if (chatbotInput) {
+                chatbotInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') sendChatMessage();
+                });
+            }
+
+            // Smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+            
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            }
+        }
+
+        // Language toggle
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'id' ? 'en' : 'id';
+            const langToggle = document.getElementById('langToggle');
+            if (langToggle) {
+                langToggle.textContent = currentLanguage === 'id' ? 'EN' : 'ID';
+            }
+            updateLanguage();
+        }
+
+        // Update language
+        function updateLanguage() {
+            const t = translations[currentLanguage];
+            
+            // Update navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            const navTexts = ['home', 'destinations', 'gallery', 'events', 'contact'];
+            navLinks.forEach((link, index) => {
+                if (t[navTexts[index]]) {
+                    link.textContent = t[navTexts[index]];
+                }
+            });
+
+            // Update other elements
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput && t.searchPlaceholder) {
+                searchInput.placeholder = t.searchPlaceholder;
+            }
+        }
+
+        // Search functionality
+        function performSearch() {
+            const searchInput = document.getElementById('searchInput');
+            if (!searchInput) return;
+
+            const query = searchInput.value.toLowerCase().trim();
+            if (!query) return;
+
+            const filteredDestinations = destinations.filter(dest => 
+                dest.name.toLowerCase().includes(query) || 
+                dest.description.toLowerCase().includes(query)
+            );
+
+            const grid = document.getElementById('destinationsGrid');
+            if (grid) {
+                if (filteredDestinations.length === 0) {
+                    grid.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-color);">Tidak ada destinasi yang ditemukan</div>';
+                } else {
+                    grid.innerHTML = filteredDestinations.map(dest => `
+                        <div class="destination-card">
+                            <div class="destination-image">${dest.image}</div>
+                            <div class="destination-content">
+                                <h3 class="destination-title">${dest.name}</h3>
+                                <p class="destination-desc">${dest.description}</p>
+                                <div class="destination-meta">
+                                    <div class="rating">
+                                        ${'★'.repeat(Math.floor(dest.rating))} ${dest.rating}
+                                    </div>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: calc(var(--font-size) * 0.875px);">
+                                        Detail
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        // Contact form handler
+        async function handleContactSubmit(e) {
+            e.preventDefault();
+            
+            if (currentRecordCount >= 999) {
+                showNotification("Maaf, batas maksimum 999 pesan telah tercapai. Silakan coba lagi nanti.", "error");
+                return;
+            }
+
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoading = submitBtn.querySelector('.btn-loading');
+
+            // Show loading state
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-flex';
+            submitBtn.disabled = true;
+
+            try {
+                const formData = {
+                    id: Date.now().toString(),
+                    type: 'contact',
+                    name: document.getElementById('contactName').value,
+                    email: document.getElementById('contactEmail').value,
+                    destination: document.getElementById('contactDestination').value,
+                    rating: parseInt(document.getElementById('contactRating').value) || null,
+                    message: document.getElementById('contactMessage').value,
+                    timestamp: new Date().toISOString(),
+                    date: new Date().toLocaleDateString('id-ID')
+                };
+
+                if (window.dataSdk) {
+                    const result = await window.dataSdk.create(formData);
+                    
+                    if (result.isOk) {
+                        showNotification("Pesan Anda telah berhasil dikirim! Terima kasih atas feedback Anda.", "success");
+                        form.reset();
+                    } else {
+                        showNotification("Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.", "error");
+                    }
+                } else {
+                    showNotification("Pesan Anda telah diterima! Terima kasih atas feedback Anda.", "success");
+                    form.reset();
+                }
+            } catch (error) {
+                showNotification("Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.", "error");
+            } finally {
+                // Hide loading state
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 2rem;
+                background: ${type === 'success' ? 'var(--accent-color)' : type === 'error' ? '#ef4444' : 'var(--primary-color)'};
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                z-index: 10000;
+                max-width: 300px;
+                font-size: calc(var(--font-size) * 0.875px);
+                animation: slideInRight 0.3s ease-out;
+            `;
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease-in forwards';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        // Chatbot functionality
+        function toggleChatbot() {
+            const chatbotWindow = document.getElementById('chatbotWindow');
+            if (chatbotWindow) {
+                chatbotWindow.style.display = chatbotWindow.style.display === 'flex' ? 'none' : 'flex';
+            }
+        }
+
+        function closeChatbot() {
+            const chatbotWindow = document.getElementById('chatbotWindow');
+            if (chatbotWindow) {
+                chatbotWindow.style.display = 'none';
+            }
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatbotInput');
+            const messages = document.getElementById('chatbotMessages');
+            
+            if (!input || !messages || !input.value.trim()) return;
+
+            const userMessage = input.value.trim();
+            
+            // Add user message
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user';
+            userDiv.textContent = userMessage;
+            messages.appendChild(userDiv);
+
+            // Clear input
+            input.value = '';
+
+            // Simulate bot response
+            setTimeout(() => {
+                const botDiv = document.createElement('div');
+                botDiv.className = 'message bot';
+                botDiv.textContent = getBotResponse(userMessage);
+                messages.appendChild(botDiv);
+                messages.scrollTop = messages.scrollHeight;
+            }, 1000);
+
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function getBotResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('kota tua') || lowerMessage.includes('old town')) {
+                return 'Kota Tua Jakarta adalah kawasan bersejarah yang wajib dikunjungi! Anda bisa melihat Museum Fatahillah, Cafe Batavia, dan berfoto di area yang Instagramable. Buka setiap hari dari pukul 09:00-15:00.';
+            } else if (lowerMessage.includes('monas') || lowerMessage.includes('monumen')) {
+                return 'Monumen Nasional (Monas) adalah ikon Jakarta! Anda bisa naik ke puncak untuk melihat pemandangan kota. Tiket masuk Rp 15.000 untuk dewasa. Buka Selasa-Minggu, tutup hari Senin.';
+            } else if (lowerMessage.includes('ancol')) {
+                return 'Taman Impian Jaya Ancol menawarkan berbagai wahana seru! Ada Dufan, SeaWorld, Atlantis Water Adventure, dan pantai. Tiket gerbang Rp 25.000, tiket wahana terpisah.';
+            } else if (lowerMessage.includes('kuliner') || lowerMessage.includes('makanan')) {
+                return 'Jakarta terkenal dengan kulinernya! Coba kerak telor, soto Betawi, nasi uduk, dan gado-gado. Untuk street food, kunjungi Pasar Baru atau Pecenongan.';
+            } else if (lowerMessage.includes('transportasi') || lowerMessage.includes('transport')) {
+                return 'Jakarta memiliki MRT, LRT, TransJakarta, dan taksi online. MRT sangat nyaman untuk ke area Bundaran HI dan Kota Tua. TransJakarta menghubungkan hampir seluruh Jakarta.';
+            } else if (lowerMessage.includes('cuaca') || lowerMessage.includes('weather')) {
+                return 'Jakarta beriklim tropis dengan suhu 26-32°C. Musim hujan November-Maret, musim kering April-Oktober. Selalu bawa payung saat musim hujan!';
+            } else {
+                return 'Terima kasih atas pertanyaannya! Saya bisa membantu informasi tentang destinasi wisata, kuliner, transportasi, dan tips wisata di Jakarta. Ada yang ingin ditanyakan?';
+            }
+        }
+
+        // Initialize animations
+        function initializeAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Initialize carousel
+        function initializeCarousel() {
+            const slides = document.querySelectorAll('.testimonial-slide');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                slides[index].classList.add('active');
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            // Auto-advance carousel
+            setInterval(nextSlide, 5000);
+        }
+
+        // Initialize counters
+        function initializeCounters() {
+            const counters = document.querySelectorAll('.stat-number[data-count]');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+            counters.forEach(counter => observer.observe(counter));
+        }
+
+        function animateCounter(element) {
+            const target = parseInt(element.dataset.count);
+            const duration = 2000;
+            const step = target / (duration / 16);
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+            }, 16);
+        }
+
+        // Open destination details
+        function openDestinationDetails(id) {
+            const destination = destinations.find(d => d.id == id);
+            if (destination) {
+                showNotification(`Membuka detail ${destination.name}...`, 'info');
+            }
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99e2ff82717be787',t:'MTc2MzA4NjQ5NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
