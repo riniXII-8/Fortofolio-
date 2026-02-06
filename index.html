@@ -1,0 +1,1183 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Jelajahi kuliner khas Subang dengan berbagai pilihan makanan tradisional dan modern. Temukan restoran terbaik dengan review dan rekomendasi.">
+  <meta name="keywords" content="kuliner subang, makanan khas subang, restoran subang, wisata kuliner">
+  <title>Kuliner Khas Subang - Jelajahi Cita Rasa Nusantara</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    .font-heading {
+      font-family: 'Playfair Display', serif;
+    }
+    
+    .font-body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .smooth-scroll {
+      scroll-behavior: smooth;
+    }
+    
+    .parallax {
+      transform: translateY(0);
+      transition: transform 0.3s ease-out;
+    }
+    
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .slide-in-left {
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .slide-in-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .slide-in-right {
+      opacity: 0;
+      transform: translateX(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .slide-in-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #d4af37 0%, #aa8625 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .overlay-dark {
+      background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+    }
+    
+    .chatbot-button {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .modal-backdrop {
+      backdrop-filter: blur(8px);
+    }
+    
+    .loading-spinner {
+      border: 3px solid rgba(212, 175, 55, 0.2);
+      border-top: 3px solid #d4af37;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      animation: slideInRight 0.3s ease;
+    }
+    
+    @keyframes slideInRight {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="font-body smooth-scroll h-full overflow-auto">
+  <div id="app-wrapper" class="w-full h-full"><!-- Navbar -->
+   <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex justify-between items-center h-20">
+      <div class="flex items-center space-x-3">
+       <div class="text-3xl">
+        🍜
+       </div><span id="nav-title" class="text-2xl font-heading font-bold"></span>
+      </div>
+      <div class="hidden md:flex items-center space-x-8"><a href="#home" class="nav-link font-medium hover:opacity-80 transition-opacity">Home</a> <a href="#menu" class="nav-link font-medium hover:opacity-80 transition-opacity">Menu</a> <a href="#restaurants" class="nav-link font-medium hover:opacity-80 transition-opacity">Restoran</a> <a href="#gallery" class="nav-link font-medium hover:opacity-80 transition-opacity">Galeri</a> <a href="#articles" class="nav-link font-medium hover:opacity-80 transition-opacity">Artikel</a> <a href="#contact" class="nav-link font-medium hover:opacity-80 transition-opacity">Kontak</a>
+      </div>
+      <div class="flex items-center space-x-4"><button id="lang-toggle" class="px-3 py-1 rounded-full font-medium text-sm transition-all"> 🌐 ID </button> <button id="theme-toggle" class="p-2 rounded-full transition-all"> <i class="fas fa-moon text-xl"></i> </button> <button id="mobile-menu-btn" class="md:hidden p-2"> <i class="fas fa-bars text-xl"></i> </button>
+      </div>
+     </div>
+    </div><!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden">
+     <div class="px-4 py-4 space-y-3"><a href="#home" class="mobile-nav-link block px-4 py-2 rounded-lg font-medium">Home</a> <a href="#menu" class="mobile-nav-link block px-4 py-2 rounded-lg font-medium">Menu</a> <a href="#restaurants" class="mobile-nav-link block px-4 py-2 rounded-lg font-medium">Restoran</a> <a href="#gallery" class="mobile-nav-link block px-4 py-2 rounded-lg font-medium">Galeri</a> <a href="#articles" class="mobile-nav-link block px-4 py-2 rounded-lg font-medium">Artikel</a> <a href="#contact" class="mobile-nav-link block px-4 py-2 rounded-lg font-medium">Kontak</a>
+     </div>
+    </div>
+   </nav><!-- Hero Section -->
+   <section id="home" class="relative min-h-screen flex items-center justify-center pt-20">
+    <div class="absolute inset-0 z-0">
+     <svg class="w-full h-full" viewbox="0 0 1200 800" preserveaspectratio="xMidYMid slice"><defs>
+       <lineargradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#d4af37;stop-opacity:0.2" />
+        <stop offset="100%" style="stop-color:#aa8625;stop-opacity:0.3" />
+       </lineargradient>
+      </defs> <rect width="1200" height="800" fill="url(#heroGrad)" /> <circle cx="200" cy="150" r="120" fill="#d4af37" opacity="0.1" /> <circle cx="1000" cy="600" r="150" fill="#aa8625" opacity="0.1" /> <path d="M0,400 Q300,350 600,400 T1200,400" fill="none" stroke="#d4af37" stroke-width="2" opacity="0.3" />
+     </svg>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+     <div class="fade-in">
+      <div class="text-6xl mb-6">
+       🍲
+      </div>
+      <h1 id="hero-title" class="text-5xl md:text-7xl font-heading font-bold mb-6"></h1>
+      <p id="hero-subtitle" class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90"></p>
+      <div class="flex flex-wrap justify-center gap-4"><a href="#menu" class="px-8 py-4 rounded-full font-semibold text-lg transition-all hover:scale-105 shadow-lg"> Jelajahi Menu </a> <a href="#contact" class="px-8 py-4 rounded-full font-semibold text-lg border-2 transition-all hover:scale-105"> Hubungi Kami </a>
+      </div>
+     </div><!-- Weather Widget -->
+     <div id="weather-widget" class="mt-12 inline-block px-6 py-3 rounded-full backdrop-blur-md">
+      <div class="flex items-center space-x-3"><i class="fas fa-cloud-sun text-2xl"></i> <span class="font-medium">Subang: <span id="weather-temp">28°C</span> ☀️</span>
+      </div>
+     </div>
+    </div>
+    <div class="absolute bottom-8 left-0 right-0 text-center"><a href="#menu" class="inline-block animate-bounce"> <i class="fas fa-chevron-down text-3xl"></i> </a>
+    </div>
+   </section><!-- Search & Filter Section -->
+   <section class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="rounded-2xl shadow-xl p-8">
+      <div class="grid md:grid-cols-2 gap-6">
+       <div><label for="search-input" class="block text-sm font-semibold mb-2"> <i class="fas fa-search mr-2"></i>Cari Makanan </label> <input type="text" id="search-input" placeholder="Cari nasi tutug oncom, sate maranggi..." class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all">
+       </div>
+       <div><label for="filter-select" class="block text-sm font-semibold mb-2"> <i class="fas fa-filter mr-2"></i>Filter Kategori </label> <select id="filter-select" class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all"> <option value="all">Semua Kategori</option> <option value="traditional">Tradisional</option> <option value="modern">Modern</option> <option value="sweet">Manis</option> <option value="spicy">Pedas</option> <option value="savory">Gurih</option> </select>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Menu Section -->
+   <section id="menu" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="text-center mb-16 slide-in-left">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-4">Menu Kuliner Khas Subang</h2>
+      <p class="text-lg opacity-80 max-w-2xl mx-auto">Nikmati berbagai hidangan autentik dengan cita rasa yang tak terlupakan</p>
+     </div>
+     <div id="menu-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"><!-- Menu items will be rendered here -->
+     </div>
+    </div>
+   </section><!-- Restaurants Section -->
+   <section id="restaurants" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="text-center mb-16 slide-in-right">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-4">Rekomendasi Restoran</h2>
+      <p class="text-lg opacity-80 max-w-2xl mx-auto">Tempat terbaik untuk menikmati kuliner khas Subang</p>
+     </div>
+     <div id="restaurant-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"><!-- Restaurant items will be rendered here -->
+     </div>
+    </div>
+   </section><!-- Gallery Section -->
+   <section id="gallery" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="text-center mb-16 fade-in">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-4">Galeri Kuliner</h2>
+      <p class="text-lg opacity-80 max-w-2xl mx-auto">Lihat keindahan dan kelezatan dalam setiap hidangan</p>
+     </div>
+     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div class="gallery-item aspect-square rounded-xl overflow-hidden cursor-pointer card-hover">
+       <div class="w-full h-full flex items-center justify-center text-6xl">
+        🍜
+       </div>
+      </div>
+      <div class="gallery-item aspect-square rounded-xl overflow-hidden cursor-pointer card-hover">
+       <div class="w-full h-full flex items-center justify-center text-6xl">
+        🍛
+       </div>
+      </div>
+      <div class="gallery-item aspect-square rounded-xl overflow-hidden cursor-pointer card-hover">
+       <div class="w-full h-full flex items-center justify-center text-6xl">
+        🍲
+       </div>
+      </div>
+      <div class="gallery-item aspect-square rounded-xl overflow-hidden cursor-pointer card-hover">
+       <div class="w-full h-full flex items-center justify-center text-6xl">
+        🥘
+       </div>
+      </div>
+      <div class="gallery-item aspect-square rounded-xl overflow-hidden cursor-pointer card-hover">
+       <div class="w-full h-full flex items-center justify-center text-6xl">
+        🍖
+       </div>
+      </div>
+      <div class="gallery-item aspect-square rounded-xl overflow-hidden cursor-pointer card-hover">
+       <div class="w-full h-full flex items-center justify-center text-6xl">
+        🍱
+       </div>
+      </div>
+      <div class="gallery-item aspect-square rounded-xl overflow-hidden cursor-pointer card-hover">
+       <div class="w-full h-full flex items-center justify-center text-6xl">
+        🍚
+       </div>
+      </div>
+      <div class="gallery-item aspect-square rounded-xl overflow-hidden cursor-pointer card-hover">
+       <div class="w-full h-full flex items-center justify-center text-6xl">
+        🥗
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Testimonials Section -->
+   <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="text-center mb-16 fade-in">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-4">Testimoni Pengunjung</h2>
+      <p class="text-lg opacity-80 max-w-2xl mx-auto">Apa kata mereka tentang kuliner Subang</p>
+     </div>
+     <div class="relative">
+      <div id="testimonial-slider" class="overflow-hidden rounded-2xl shadow-xl p-12"><!-- Testimonials will be rendered here -->
+      </div>
+      <div class="flex justify-center mt-6 space-x-2"><button id="prev-testimonial" class="p-3 rounded-full transition-all hover:scale-110"> <i class="fas fa-chevron-left"></i> </button> <button id="next-testimonial" class="p-3 rounded-full transition-all hover:scale-110"> <i class="fas fa-chevron-right"></i> </button>
+      </div>
+     </div>
+    </div>
+   </section><!-- Articles Section -->
+   <section id="articles" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="text-center mb-16 slide-in-left">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-4">Artikel Kuliner</h2>
+      <p class="text-lg opacity-80 max-w-2xl mx-auto">Baca cerita dan tips seputar kuliner Subang</p>
+     </div>
+     <div id="article-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"><!-- Articles will be rendered here -->
+     </div>
+    </div>
+   </section><!-- Booking & Contact Section -->
+   <section id="contact" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="grid lg:grid-cols-2 gap-12"><!-- Booking Form -->
+      <div class="slide-in-left">
+       <div class="rounded-2xl shadow-xl p-8">
+        <h3 class="text-3xl font-heading font-bold mb-6"><i class="fas fa-calendar-check mr-3"></i>Reservasi Meja</h3>
+        <form id="booking-form" class="space-y-4">
+         <div><label for="booking-name" class="block text-sm font-semibold mb-2">Nama Lengkap</label> <input type="text" id="booking-name" required class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all" placeholder="Masukkan nama Anda">
+         </div>
+         <div><label for="booking-email" class="block text-sm font-semibold mb-2">Email</label> <input type="email" id="booking-email" required class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all" placeholder="email@example.com">
+         </div>
+         <div><label for="booking-restaurant" class="block text-sm font-semibold mb-2">Pilih Restoran</label> <select id="booking-restaurant" required class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all"> <option value="">Pilih restoran...</option> <option value="Warung Nasi Tutug Oncom">Warung Nasi Tutug Oncom</option> <option value="Sate Maranggi Cibungur">Sate Maranggi Cibungur</option> <option value="RM Khas Subang">RM Khas Subang</option> </select>
+         </div>
+         <div class="grid grid-cols-2 gap-4">
+          <div><label for="booking-date" class="block text-sm font-semibold mb-2">Tanggal</label> <input type="date" id="booking-date" required class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all">
+          </div>
+          <div><label for="booking-time" class="block text-sm font-semibold mb-2">Waktu</label> <input type="time" id="booking-time" required class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all">
+          </div>
+         </div>
+         <div><label for="booking-guests" class="block text-sm font-semibold mb-2">Jumlah Tamu</label> <input type="number" id="booking-guests" required min="1" max="20" class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all" placeholder="Jumlah orang">
+         </div><button type="submit" id="booking-submit-btn" class="w-full py-4 rounded-lg font-bold text-lg transition-all hover:scale-105 shadow-lg flex items-center justify-center"> <span id="booking-btn-text">Kirim Reservasi</span> </button>
+        </form>
+       </div>
+      </div><!-- Contact & Review Form -->
+      <div class="slide-in-right">
+       <div class="rounded-2xl shadow-xl p-8 mb-8">
+        <h3 class="text-3xl font-heading font-bold mb-6"><i class="fas fa-envelope mr-3"></i>Hubungi Kami</h3>
+        <form id="contact-form" class="space-y-4">
+         <div><label for="contact-name" class="block text-sm font-semibold mb-2">Nama</label> <input type="text" id="contact-name" required class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all" placeholder="Nama Anda">
+         </div>
+         <div><label for="contact-email" class="block text-sm font-semibold mb-2">Email</label> <input type="email" id="contact-email" required class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all" placeholder="email@example.com">
+         </div>
+         <div><label for="contact-message" class="block text-sm font-semibold mb-2">Pesan</label> <textarea id="contact-message" required rows="4" class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all resize-none" placeholder="Tulis pesan Anda..."></textarea>
+         </div><button type="submit" id="contact-submit-btn" class="w-full py-4 rounded-lg font-bold text-lg transition-all hover:scale-105 shadow-lg flex items-center justify-center"> <span id="contact-btn-text">Kirim Pesan</span> </button>
+        </form>
+       </div>
+       <div class="rounded-2xl shadow-xl p-8">
+        <h3 class="text-3xl font-heading font-bold mb-6"><i class="fas fa-star mr-3"></i>Berikan Penilaian</h3>
+        <form id="review-form" class="space-y-4">
+         <div><label for="review-name" class="block text-sm font-semibold mb-2">Nama</label> <input type="text" id="review-name" required class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all" placeholder="Nama Anda">
+         </div>
+         <div><label class="block text-sm font-semibold mb-2">Rating</label>
+          <div id="star-rating" class="flex space-x-2"><i class="fas fa-star text-3xl cursor-pointer transition-all hover:scale-110" data-rating="1"></i> <i class="fas fa-star text-3xl cursor-pointer transition-all hover:scale-110" data-rating="2"></i> <i class="fas fa-star text-3xl cursor-pointer transition-all hover:scale-110" data-rating="3"></i> <i class="fas fa-star text-3xl cursor-pointer transition-all hover:scale-110" data-rating="4"></i> <i class="fas fa-star text-3xl cursor-pointer transition-all hover:scale-110" data-rating="5"></i>
+          </div><input type="hidden" id="review-rating" value="5">
+         </div>
+         <div><label for="review-message" class="block text-sm font-semibold mb-2">Review</label> <textarea id="review-message" required rows="4" class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 transition-all resize-none" placeholder="Ceritakan pengalaman Anda..."></textarea>
+         </div><button type="submit" id="review-submit-btn" class="w-full py-4 rounded-lg font-bold text-lg transition-all hover:scale-105 shadow-lg flex items-center justify-center"> <span id="review-btn-text">Kirim Review</span> </button>
+        </form>
+       </div>
+      </div>
+     </div><!-- Map Section -->
+     <div class="mt-12 rounded-2xl shadow-xl overflow-hidden">
+      <div class="p-8 text-center">
+       <h3 class="text-3xl font-heading font-bold mb-4"><i class="fas fa-map-marker-alt mr-3"></i>Lokasi Subang</h3>
+       <p class="mb-6 opacity-80">Jawa Barat, Indonesia</p>
+       <div class="aspect-video rounded-xl overflow-hidden flex items-center justify-center text-6xl">
+        🗺️
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Stats Counter -->
+   <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="rounded-2xl shadow-xl p-12">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+       <div class="fade-in">
+        <div class="text-5xl font-bold gradient-text mb-2">
+         50+
+        </div>
+        <div class="opacity-80">
+         Menu Khas
+        </div>
+       </div>
+       <div class="fade-in">
+        <div class="text-5xl font-bold gradient-text mb-2">
+         30+
+        </div>
+        <div class="opacity-80">
+         Restoran
+        </div>
+       </div>
+       <div class="fade-in">
+        <div class="text-5xl font-bold gradient-text mb-2" id="visitor-count">
+         1,234
+        </div>
+        <div class="opacity-80">
+         Pengunjung
+        </div>
+       </div>
+       <div class="fade-in">
+        <div class="text-5xl font-bold gradient-text mb-2">
+         4.8/5
+        </div>
+        <div class="opacity-80">
+         Rating
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Footer -->
+   <footer class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="grid md:grid-cols-4 gap-8 mb-8">
+      <div>
+       <div class="flex items-center space-x-2 mb-4">
+        <div class="text-3xl">
+         🍜
+        </div><span class="text-xl font-heading font-bold">Kuliner Subang</span>
+       </div>
+       <p class="opacity-80 mb-4">Jelajahi kekayaan cita rasa kuliner khas Subang yang autentik dan tak terlupakan.</p>
+       <div class="flex space-x-3"><a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="p-2 rounded-full transition-all hover:scale-110"> <i class="fab fa-facebook text-xl"></i> </a> <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="p-2 rounded-full transition-all hover:scale-110"> <i class="fab fa-instagram text-xl"></i> </a> <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="p-2 rounded-full transition-all hover:scale-110"> <i class="fab fa-twitter text-xl"></i> </a> <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="p-2 rounded-full transition-all hover:scale-110"> <i class="fab fa-youtube text-xl"></i> </a>
+       </div>
+      </div>
+      <div>
+       <h4 class="font-heading font-bold text-lg mb-4">Menu</h4>
+       <ul class="space-y-2 opacity-80">
+        <li><a href="#home" class="hover:opacity-60 transition-opacity">Home</a></li>
+        <li><a href="#menu" class="hover:opacity-60 transition-opacity">Menu Kuliner</a></li>
+        <li><a href="#restaurants" class="hover:opacity-60 transition-opacity">Restoran</a></li>
+        <li><a href="#gallery" class="hover:opacity-60 transition-opacity">Galeri</a></li>
+       </ul>
+      </div>
+      <div>
+       <h4 class="font-heading font-bold text-lg mb-4">Informasi</h4>
+       <ul class="space-y-2 opacity-80">
+        <li><a href="#articles" class="hover:opacity-60 transition-opacity">Artikel</a></li>
+        <li><a href="#contact" class="hover:opacity-60 transition-opacity">Kontak</a></li>
+        <li><a href="#" class="hover:opacity-60 transition-opacity">Tentang Kami</a></li>
+        <li><a href="#" class="hover:opacity-60 transition-opacity">FAQ</a></li>
+       </ul>
+      </div>
+      <div>
+       <h4 class="font-heading font-bold text-lg mb-4">Kontak</h4>
+       <ul class="space-y-2 opacity-80">
+        <li><i class="fas fa-map-marker-alt mr-2"></i>Subang, Jawa Barat</li>
+        <li><i class="fas fa-phone mr-2"></i>+62 812-3456-7890</li>
+        <li><i class="fas fa-envelope mr-2"></i>info@kulinersubang.id</li>
+       </ul>
+      </div>
+     </div>
+     <div class="border-t pt-8 text-center opacity-80">
+      <p id="footer-text"></p>
+     </div>
+    </div>
+   </footer><!-- Chatbot Button --> <button id="chatbot-btn" class="chatbot-button w-16 h-16 rounded-full shadow-2xl flex items-center justify-center"> <i class="fas fa-comments text-2xl"></i> </button> <!-- Chatbot Modal -->
+   <div id="chatbot-modal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4">
+    <div class="rounded-2xl shadow-2xl max-w-md w-full max-h-[600px] flex flex-col">
+     <div class="p-6 border-b flex justify-between items-center">
+      <h3 class="text-xl font-bold"><i class="fas fa-robot mr-2"></i>Chat Assistant</h3><button id="close-chatbot" class="p-2 rounded-full transition-all hover:scale-110"> <i class="fas fa-times text-xl"></i> </button>
+     </div>
+     <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4">
+      <div class="flex items-start space-x-3">
+       <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm">
+        🤖
+       </div>
+       <div class="flex-1 p-3 rounded-lg">
+        <p>Halo! Ada yang bisa saya bantu? Tanya saya tentang kuliner Subang, rekomendasi restoran, atau informasi lainnya.</p>
+       </div>
+      </div>
+     </div>
+     <div class="p-4 border-t">
+      <form id="chat-form" class="flex space-x-2"><input type="text" id="chat-input" placeholder="Ketik pesan..." class="flex-1 px-4 py-2 rounded-full border-2 focus:outline-none focus:ring-2"> <button type="submit" class="p-3 rounded-full transition-all hover:scale-110"> <i class="fas fa-paper-plane"></i> </button>
+      </form>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    // Default Configuration
+    const defaultConfig = {
+      site_title: "Kuliner Khas Subang",
+      hero_title: "Jelajahi Cita Rasa Subang",
+      hero_subtitle: "Temukan kelezatan kuliner tradisional dan modern yang memanjakan lidah Anda",
+      footer_text: "© 2024 Kuliner Khas Subang. Semua hak dilindungi.",
+      background_color: "#ffffff",
+      surface_color: "#f8f9fa",
+      text_color: "#1a1a1a",
+      primary_action_color: "#d4af37",
+      secondary_action_color: "#aa8625",
+      font_family: "Inter",
+      font_size: 16
+    };
+
+    let currentLanguage = 'id';
+    let currentTheme = 'light';
+    let currentTestimonial = 0;
+    let selectedRating = 5;
+    let visitorCount = 1234;
+    let menuData = [];
+    let restaurantData = [];
+    let testimonialData = [];
+    let articleData = [];
+
+    // Initialize static data
+    const initStaticData = () => {
+      menuData = [
+        { id: 1, name: 'Nasi Tutug Oncom', category: 'traditional', tags: ['savory', 'spicy'], price: 'Rp 25.000', description: 'Nasi khas Subang dengan oncom yang ditumbuk dan bumbu rempah pilihan', icon: '🍚' },
+        { id: 2, name: 'Sate Maranggi', category: 'traditional', tags: ['savory'], price: 'Rp 45.000', description: 'Sate daging sapi khas Purwakarta-Subang dengan bumbu kecap manis', icon: '🍖' },
+        { id: 3, name: 'Mochi Subang', category: 'modern', tags: ['sweet'], price: 'Rp 15.000', description: 'Kue mochi lembut dengan berbagai varian rasa modern', icon: '🍡' },
+        { id: 4, name: 'Peuyeum Bandung', category: 'traditional', tags: ['sweet'], price: 'Rp 20.000', description: 'Singkong fermentasi dengan rasa manis alami', icon: '🍠' },
+        { id: 5, name: 'Colenak', category: 'traditional', tags: ['sweet'], price: 'Rp 18.000', description: 'Pepes tape dibakar dengan kelapa dan gula merah', icon: '🍢' },
+        { id: 6, name: 'Nasi Jamblang', category: 'traditional', tags: ['savory', 'spicy'], price: 'Rp 30.000', description: 'Nasi dibungkus daun jati dengan aneka lauk pilihan', icon: '🍱' }
+      ];
+
+      restaurantData = [
+        { id: 1, name: 'Warung Nasi Tutug Oncom', address: 'Jl. Raya Subang No. 45', hours: '08:00 - 21:00', rating: 4.8, icon: '🏠' },
+        { id: 2, name: 'Sate Maranggi Cibungur', address: 'Jl. Cibungur No. 12', hours: '10:00 - 22:00', rating: 4.9, icon: '🏪' },
+        { id: 3, name: 'RM Khas Subang', address: 'Jl. Dewi Sartika No. 89', hours: '07:00 - 20:00', rating: 4.7, icon: '🏛️' }
+      ];
+
+      testimonialData = [
+        { name: 'Budi Santoso', text: 'Nasi tutug oncom di sini luar biasa! Rasanya autentik dan mengingatkan saya pada kampung halaman.', rating: 5 },
+        { name: 'Siti Nurhaliza', text: 'Sate maranggi terenak yang pernah saya coba. Bumbunya meresap sempurna!', rating: 5 },
+        { name: 'Andi Wijaya', text: 'Tempatnya nyaman, pelayanan ramah, dan makanannya enak semua. Recommended!', rating: 4 }
+      ];
+
+      articleData = [
+        { id: 1, title: 'Sejarah Nasi Tutug Oncom', excerpt: 'Mengenal asal-usul makanan khas Subang yang legendaris...', icon: '📖' },
+        { id: 2, title: '10 Tempat Kuliner Terbaik di Subang', excerpt: 'Rekomendasi destinasi kuliner yang wajib dikunjungi...', icon: '📍' },
+        { id: 3, title: 'Tips Memilih Sate Maranggi Berkualitas', excerpt: 'Panduan memilih sate maranggi yang empuk dan lezat...', icon: '💡' }
+      ];
+    };
+
+    // Render Functions
+    const renderMenu = () => {
+      const searchTerm = document.getElementById('search-input').value.toLowerCase();
+      const filterCategory = document.getElementById('filter-select').value;
+      
+      let filteredMenu = menuData;
+      if (searchTerm) {
+        filteredMenu = filteredMenu.filter(item => 
+          item.name.toLowerCase().includes(searchTerm) || 
+          item.description.toLowerCase().includes(searchTerm)
+        );
+      }
+      if (filterCategory !== 'all') {
+        filteredMenu = filteredMenu.filter(item => 
+          item.category === filterCategory || item.tags.includes(filterCategory)
+        );
+      }
+
+      const menuGrid = document.getElementById('menu-grid');
+      menuGrid.innerHTML = filteredMenu.map(item => `
+        <div class="card-hover rounded-2xl shadow-lg overflow-hidden" style="background-color: ${window.elementSdk.config.surface_color};">
+          <div class="p-8">
+            <div class="text-6xl mb-4 text-center">${item.icon}</div>
+            <h3 class="text-2xl font-heading font-bold mb-2" style="color: ${window.elementSdk.config.text_color};">${item.name}</h3>
+            <p class="opacity-80 mb-4" style="color: ${window.elementSdk.config.text_color};">${item.description}</p>
+            <div class="flex justify-between items-center">
+              <span class="text-xl font-bold" style="color: ${window.elementSdk.config.primary_action_color};">${item.price}</span>
+              <button class="share-btn px-4 py-2 rounded-full text-sm font-semibold transition-all hover:scale-105" style="background-color: ${window.elementSdk.config.primary_action_color}; color: #ffffff;">
+                <i class="fas fa-share-alt mr-2"></i>Share
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    };
+
+    const renderRestaurants = () => {
+      const restaurantGrid = document.getElementById('restaurant-grid');
+      restaurantGrid.innerHTML = restaurantData.map(item => `
+        <div class="card-hover rounded-2xl shadow-lg overflow-hidden" style="background-color: ${window.elementSdk.config.surface_color};">
+          <div class="p-8">
+            <div class="text-6xl mb-4 text-center">${item.icon}</div>
+            <h3 class="text-2xl font-heading font-bold mb-2" style="color: ${window.elementSdk.config.text_color};">${item.name}</h3>
+            <div class="space-y-2 mb-4 opacity-80" style="color: ${window.elementSdk.config.text_color};">
+              <p><i class="fas fa-map-marker-alt mr-2"></i>${item.address}</p>
+              <p><i class="fas fa-clock mr-2"></i>${item.hours}</p>
+              <p><i class="fas fa-star mr-2" style="color: ${window.elementSdk.config.primary_action_color};"></i>${item.rating}/5.0</p>
+            </div>
+            <button class="w-full py-3 rounded-full font-semibold transition-all hover:scale-105" style="background-color: ${window.elementSdk.config.primary_action_color}; color: #ffffff;">
+              Lihat Detail
+            </button>
+          </div>
+        </div>
+      `).join('');
+    };
+
+    const renderTestimonials = () => {
+      if (testimonialData.length === 0) return;
+      
+      const testimonial = testimonialData[currentTestimonial];
+      const slider = document.getElementById('testimonial-slider');
+      slider.style.backgroundColor = window.elementSdk.config.surface_color;
+      slider.innerHTML = `
+        <div class="text-center max-w-3xl mx-auto">
+          <div class="text-5xl mb-6">💬</div>
+          <p class="text-xl md:text-2xl font-medium mb-6 italic" style="color: ${window.elementSdk.config.text_color};">"${testimonial.text}"</p>
+          <div class="flex justify-center mb-4">
+            ${Array(testimonial.rating).fill('<i class="fas fa-star text-2xl mx-1"></i>').join('')}
+          </div>
+          <p class="font-bold text-lg" style="color: ${window.elementSdk.config.primary_action_color};">- ${testimonial.name}</p>
+        </div>
+      `;
+    };
+
+    const renderArticles = () => {
+      const articleGrid = document.getElementById('article-grid');
+      articleGrid.innerHTML = articleData.map(item => `
+        <div class="card-hover rounded-2xl shadow-lg overflow-hidden" style="background-color: ${window.elementSdk.config.surface_color};">
+          <div class="p-8">
+            <div class="text-6xl mb-4 text-center">${item.icon}</div>
+            <h3 class="text-2xl font-heading font-bold mb-3" style="color: ${window.elementSdk.config.text_color};">${item.title}</h3>
+            <p class="opacity-80 mb-6" style="color: ${window.elementSdk.config.text_color};">${item.excerpt}</p>
+            <button class="px-6 py-3 rounded-full font-semibold transition-all hover:scale-105" style="background-color: ${window.elementSdk.config.secondary_action_color}; color: #ffffff;">
+              Baca Selengkapnya
+            </button>
+          </div>
+        </div>
+      `).join('');
+    };
+
+    // Theme Functions
+    const applyTheme = () => {
+      const isDark = currentTheme === 'dark';
+      const root = document.documentElement;
+      const appWrapper = document.getElementById('app-wrapper');
+      
+      if (isDark) {
+        root.style.backgroundColor = '#0f172a';
+        appWrapper.style.backgroundColor = '#0f172a';
+        appWrapper.style.color = '#f1f5f9';
+      } else {
+        root.style.backgroundColor = window.elementSdk.config.background_color;
+        appWrapper.style.backgroundColor = window.elementSdk.config.background_color;
+        appWrapper.style.color = window.elementSdk.config.text_color;
+      }
+      
+      updateThemeColors();
+    };
+
+    const updateThemeColors = () => {
+      const isDark = currentTheme === 'dark';
+      const bgColor = isDark ? '#1e293b' : window.elementSdk.config.background_color;
+      const surfaceColor = isDark ? '#334155' : window.elementSdk.config.surface_color;
+      const textColor = isDark ? '#f1f5f9' : window.elementSdk.config.text_color;
+      const primaryColor = window.elementSdk.config.primary_action_color;
+      const secondaryColor = window.elementSdk.config.secondary_action_color;
+      
+      // Update navbar
+      const navbar = document.getElementById('navbar');
+      navbar.style.backgroundColor = isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)';
+      navbar.style.color = textColor;
+      navbar.style.backdropFilter = 'blur(10px)';
+      
+      // Update all nav links
+      document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
+        link.style.color = textColor;
+      });
+      
+      // Update buttons
+      document.querySelectorAll('button:not([id])').forEach(btn => {
+        if (!btn.closest('#star-rating')) {
+          btn.style.backgroundColor = primaryColor;
+          btn.style.color = '#ffffff';
+        }
+      });
+      
+      // Update language toggle
+      const langToggle = document.getElementById('lang-toggle');
+      langToggle.style.backgroundColor = surfaceColor;
+      langToggle.style.color = textColor;
+      
+      // Update theme toggle
+      const themeToggle = document.getElementById('theme-toggle');
+      themeToggle.style.backgroundColor = surfaceColor;
+      themeToggle.style.color = textColor;
+      themeToggle.querySelector('i').className = isDark ? 'fas fa-sun text-xl' : 'fas fa-moon text-xl';
+      
+      // Update mobile menu
+      const mobileMenu = document.getElementById('mobile-menu');
+      mobileMenu.style.backgroundColor = isDark ? '#1e293b' : '#ffffff';
+      
+      // Update hero section
+      document.querySelector('#home').style.backgroundColor = bgColor;
+      document.querySelector('#home').style.color = textColor;
+      
+      // Update all sections
+      document.querySelectorAll('section').forEach(section => {
+        section.style.backgroundColor = bgColor;
+        section.style.color = textColor;
+      });
+      
+      // Update footer
+      const footer = document.querySelector('footer');
+      footer.style.backgroundColor = surfaceColor;
+      footer.style.color = textColor;
+      
+      // Update chatbot
+      const chatbotBtn = document.getElementById('chatbot-btn');
+      chatbotBtn.style.backgroundColor = primaryColor;
+      chatbotBtn.style.color = '#ffffff';
+      
+      // Update input fields
+      document.querySelectorAll('input, select, textarea').forEach(input => {
+        input.style.backgroundColor = isDark ? '#334155' : '#ffffff';
+        input.style.color = textColor;
+        input.style.borderColor = isDark ? '#475569' : '#e2e8f0';
+      });
+      
+      // Update weather widget
+      const weatherWidget = document.getElementById('weather-widget');
+      weatherWidget.style.backgroundColor = `${surfaceColor}80`;
+      weatherWidget.style.color = textColor;
+      
+      // Update gallery items
+      document.querySelectorAll('.gallery-item').forEach(item => {
+        item.style.backgroundColor = surfaceColor;
+      });
+      
+      // Re-render dynamic content
+      renderMenu();
+      renderRestaurants();
+      renderTestimonials();
+      renderArticles();
+    };
+
+    // Language Functions
+    const translations = {
+      id: {
+        home: 'Home',
+        menu: 'Menu',
+        restaurants: 'Restoran',
+        gallery: 'Galeri',
+        articles: 'Artikel',
+        contact: 'Kontak',
+        search: 'Cari Makanan',
+        filter: 'Filter Kategori',
+        all: 'Semua Kategori',
+        traditional: 'Tradisional',
+        modern: 'Modern',
+        sweet: 'Manis',
+        spicy: 'Pedas',
+        savory: 'Gurih'
+      },
+      en: {
+        home: 'Home',
+        menu: 'Menu',
+        restaurants: 'Restaurants',
+        gallery: 'Gallery',
+        articles: 'Articles',
+        contact: 'Contact',
+        search: 'Search Food',
+        filter: 'Filter Category',
+        all: 'All Categories',
+        traditional: 'Traditional',
+        modern: 'Modern',
+        sweet: 'Sweet',
+        spicy: 'Spicy',
+        savory: 'Savory'
+      }
+    };
+
+    const updateLanguage = () => {
+      const t = translations[currentLanguage];
+      document.querySelectorAll('.nav-link, .mobile-nav-link').forEach((link, index) => {
+        const keys = ['home', 'menu', 'restaurants', 'gallery', 'articles', 'contact'];
+        if (keys[index]) link.textContent = t[keys[index]];
+      });
+      
+      document.querySelector('label[for="search-input"]').innerHTML = `<i class="fas fa-search mr-2"></i>${t.search}`;
+      document.querySelector('label[for="filter-select"]').innerHTML = `<i class="fas fa-filter mr-2"></i>${t.filter}`;
+      
+      const filterSelect = document.getElementById('filter-select');
+      filterSelect.options[0].text = t.all;
+      filterSelect.options[1].text = t.traditional;
+      filterSelect.options[2].text = t.modern;
+      filterSelect.options[3].text = t.sweet;
+      filterSelect.options[4].text = t.spicy;
+      filterSelect.options[5].text = t.savory;
+      
+      document.getElementById('lang-toggle').textContent = currentLanguage === 'id' ? '🌐 ID' : '🌐 EN';
+    };
+
+    // Event Handlers
+    const setupEventListeners = () => {
+      // Theme toggle
+      document.getElementById('theme-toggle').addEventListener('click', () => {
+        currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+        applyTheme();
+      });
+      
+      // Language toggle
+      document.getElementById('lang-toggle').addEventListener('click', () => {
+        currentLanguage = currentLanguage === 'id' ? 'en' : 'id';
+        updateLanguage();
+      });
+      
+      // Mobile menu
+      document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenu.classList.toggle('hidden');
+      });
+      
+      // Search and filter
+      document.getElementById('search-input').addEventListener('input', renderMenu);
+      document.getElementById('filter-select').addEventListener('change', renderMenu);
+      
+      // Testimonial navigation
+      document.getElementById('prev-testimonial').addEventListener('click', () => {
+        currentTestimonial = (currentTestimonial - 1 + testimonialData.length) % testimonialData.length;
+        renderTestimonials();
+      });
+      
+      document.getElementById('next-testimonial').addEventListener('click', () => {
+        currentTestimonial = (currentTestimonial + 1) % testimonialData.length;
+        renderTestimonials();
+      });
+      
+      // Star rating
+      document.querySelectorAll('#star-rating i').forEach(star => {
+        star.addEventListener('click', (e) => {
+          selectedRating = parseInt(e.target.dataset.rating);
+          document.getElementById('review-rating').value = selectedRating;
+          updateStarRating();
+        });
+      });
+      
+      // Chatbot
+      document.getElementById('chatbot-btn').addEventListener('click', () => {
+        document.getElementById('chatbot-modal').classList.remove('hidden');
+      });
+      
+      document.getElementById('close-chatbot').addEventListener('click', () => {
+        document.getElementById('chatbot-modal').classList.add('hidden');
+      });
+      
+      document.getElementById('chat-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('chat-input');
+        const message = input.value.trim();
+        if (message) {
+          addChatMessage(message, 'user');
+          input.value = '';
+          setTimeout(() => {
+            addChatMessage('Terima kasih atas pertanyaan Anda! Tim kami akan segera membantu.', 'bot');
+          }, 1000);
+        }
+      });
+      
+      // Booking form
+      document.getElementById('booking-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('booking-submit-btn');
+        const btnText = document.getElementById('booking-btn-text');
+        const originalText = btnText.textContent;
+        
+        submitBtn.disabled = true;
+        btnText.innerHTML = '<div class="loading-spinner mx-auto"></div>';
+        
+        const bookingData = {
+          type: 'booking',
+          name: document.getElementById('booking-name').value,
+          email: document.getElementById('booking-email').value,
+          restaurant: document.getElementById('booking-restaurant').value,
+          date: document.getElementById('booking-date').value,
+          time: document.getElementById('booking-time').value,
+          guests: parseInt(document.getElementById('booking-guests').value),
+          timestamp: new Date().toISOString()
+        };
+        
+        const result = await window.dataSdk.create(bookingData);
+        
+        submitBtn.disabled = false;
+        btnText.textContent = originalText;
+        
+        if (result.isOk) {
+          showToast('Reservasi berhasil dikirim!', 'success');
+          document.getElementById('booking-form').reset();
+        } else {
+          showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
+        }
+      });
+      
+      // Contact form
+      document.getElementById('contact-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('contact-submit-btn');
+        const btnText = document.getElementById('contact-btn-text');
+        const originalText = btnText.textContent;
+        
+        submitBtn.disabled = true;
+        btnText.innerHTML = '<div class="loading-spinner mx-auto"></div>';
+        
+        const contactData = {
+          type: 'contact',
+          name: document.getElementById('contact-name').value,
+          email: document.getElementById('contact-email').value,
+          message: document.getElementById('contact-message').value,
+          timestamp: new Date().toISOString()
+        };
+        
+        const result = await window.dataSdk.create(contactData);
+        
+        submitBtn.disabled = false;
+        btnText.textContent = originalText;
+        
+        if (result.isOk) {
+          showToast('Pesan berhasil dikirim!', 'success');
+          document.getElementById('contact-form').reset();
+        } else {
+          showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
+        }
+      });
+      
+      // Review form
+      document.getElementById('review-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('review-submit-btn');
+        const btnText = document.getElementById('review-btn-text');
+        const originalText = btnText.textContent;
+        
+        submitBtn.disabled = true;
+        btnText.innerHTML = '<div class="loading-spinner mx-auto"></div>';
+        
+        const reviewData = {
+          type: 'review',
+          name: document.getElementById('review-name').value,
+          rating: selectedRating,
+          message: document.getElementById('review-message').value,
+          timestamp: new Date().toISOString()
+        };
+        
+        const result = await window.dataSdk.create(reviewData);
+        
+        submitBtn.disabled = false;
+        btnText.textContent = originalText;
+        
+        if (result.isOk) {
+          showToast('Review berhasil dikirim!', 'success');
+          document.getElementById('review-form').reset();
+          selectedRating = 5;
+          updateStarRating();
+        } else {
+          showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
+        }
+      });
+      
+      // Scroll animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, observerOptions);
+      
+      document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+        observer.observe(el);
+      });
+      
+      // Navbar scroll effect
+      let lastScroll = 0;
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        const navbar = document.getElementById('navbar');
+        
+        if (currentScroll > 100) {
+          navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+        } else {
+          navbar.style.boxShadow = 'none';
+        }
+        
+        lastScroll = currentScroll;
+      });
+      
+      // Smooth scroll
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+          }
+        });
+      });
+    };
+
+    // Utility Functions
+    const updateStarRating = () => {
+      document.querySelectorAll('#star-rating i').forEach((star, index) => {
+        if (index < selectedRating) {
+          star.style.color = window.elementSdk.config.primary_action_color;
+        } else {
+          star.style.color = currentTheme === 'dark' ? '#475569' : '#cbd5e1';
+        }
+      });
+    };
+
+    const addChatMessage = (message, sender) => {
+      const chatMessages = document.getElementById('chat-messages');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'flex items-start space-x-3';
+      
+      if (sender === 'user') {
+        messageDiv.innerHTML = `
+          <div class="flex-1"></div>
+          <div class="p-3 rounded-lg max-w-xs" style="background-color: ${window.elementSdk.config.primary_action_color}; color: #ffffff;">
+            <p>${message}</p>
+          </div>
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm" style="background-color: ${window.elementSdk.config.surface_color};">👤</div>
+        `;
+      } else {
+        messageDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm">🤖</div>
+          <div class="flex-1 p-3 rounded-lg max-w-xs" style="background-color: ${window.elementSdk.config.surface_color}; color: ${window.elementSdk.config.text_color};">
+            <p>${message}</p>
+          </div>
+        `;
+      }
+      
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
+
+    const showToast = (message, type) => {
+      const toast = document.createElement('div');
+      toast.className = 'toast px-6 py-4 rounded-lg shadow-2xl';
+      toast.style.backgroundColor = type === 'success' ? '#10b981' : '#ef4444';
+      toast.style.color = '#ffffff';
+      toast.innerHTML = `
+        <div class="flex items-center space-x-3">
+          <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} text-xl"></i>
+          <span class="font-semibold">${message}</span>
+        </div>
+      `;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideInRight 0.3s ease reverse';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    };
+
+    const updateVisitorCount = () => {
+      visitorCount++;
+      document.getElementById('visitor-count').textContent = visitorCount.toLocaleString('id-ID');
+    };
+
+    // Config change handler
+    const onConfigChange = async (config) => {
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const baseFontSize = config.font_size || defaultConfig.font_size;
+      const fontStack = `${fontFamily}, Inter, sans-serif`;
+      
+      // Update text content
+      document.getElementById('nav-title').textContent = config.site_title || defaultConfig.site_title;
+      document.getElementById('hero-title').textContent = config.hero_title || defaultConfig.hero_title;
+      document.getElementById('hero-subtitle').textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
+      document.getElementById('footer-text').textContent = config.footer_text || defaultConfig.footer_text;
+      
+      // Update fonts
+      document.body.style.fontFamily = fontStack;
+      document.querySelectorAll('.font-body').forEach(el => {
+        el.style.fontFamily = fontStack;
+      });
+      
+      document.querySelectorAll('.font-heading').forEach(el => {
+        el.style.fontFamily = `${fontFamily}, Playfair Display, serif`;
+      });
+      
+      // Update font sizes
+      document.body.style.fontSize = `${baseFontSize}px`;
+      document.querySelectorAll('h1').forEach(el => el.style.fontSize = `${baseFontSize * 3}px`);
+      document.querySelectorAll('h2').forEach(el => el.style.fontSize = `${baseFontSize * 2}px`);
+      document.querySelectorAll('h3').forEach(el => el.style.fontSize = `${baseFontSize * 1.5}px`);
+      document.querySelectorAll('p, li, label, input, select, textarea, button').forEach(el => {
+        if (!el.classList.contains('text-xl') && !el.classList.contains('text-2xl') && !el.classList.contains('text-3xl')) {
+          el.style.fontSize = `${baseFontSize}px`;
+        }
+      });
+      
+      // Apply theme
+      applyTheme();
+    };
+
+    // Initialize Element SDK
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange,
+      mapToCapabilities: (config) => ({
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => config.surface_color || defaultConfig.surface_color,
+            set: (value) => {
+              config.surface_color = value;
+              window.elementSdk.setConfig({ surface_color: value });
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+            set: (value) => {
+              config.primary_action_color = value;
+              window.elementSdk.setConfig({ primary_action_color: value });
+            }
+          },
+          {
+            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+            set: (value) => {
+              config.secondary_action_color = value;
+              window.elementSdk.setConfig({ secondary_action_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => {
+            config.font_family = value;
+            window.elementSdk.setConfig({ font_family: value });
+          }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (value) => {
+            config.font_size = value;
+            window.elementSdk.setConfig({ font_size: value });
+          }
+        }
+      }),
+      mapToEditPanelValues: (config) => new Map([
+        ['site_title', config.site_title || defaultConfig.site_title],
+        ['hero_title', config.hero_title || defaultConfig.hero_title],
+        ['hero_subtitle', config.hero_subtitle || defaultConfig.hero_subtitle],
+        ['footer_text', config.footer_text || defaultConfig.footer_text]
+      ])
+    });
+
+    // Initialize Data SDK
+    const dataHandler = {
+      onDataChanged(data) {
+        // Data is stored but UI is managed separately
+        // This is a write-focused application
+      }
+    };
+
+    window.dataSdk.init(dataHandler).then(result => {
+      if (!result.isOk) {
+        console.error('Failed to initialize Data SDK');
+      }
+    });
+
+    // Initialize app
+    initStaticData();
+    renderMenu();
+    renderRestaurants();
+    renderTestimonials();
+    renderArticles();
+    setupEventListeners();
+    updateVisitorCount();
+    updateStarRating();
+    
+    // Auto-rotate testimonials
+    setInterval(() => {
+      currentTestimonial = (currentTestimonial + 1) % testimonialData.length;
+      renderTestimonials();
+    }, 5000);
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ac4ec03825389ad',t:'MTc2NTQ1NTQ3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
